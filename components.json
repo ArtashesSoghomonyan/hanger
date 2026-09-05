@@ -1,0 +1,22 @@
+{
+  "$schema": "https://www.shadcn-vue.com/schema.json",
+  "style": "reka-mira",
+  "typescript": true,
+  "tailwind": {
+    "config": "",
+    "css": "src/main.css",
+    "baseColor": "olive",
+    "cssVariables": true,
+    "prefix": ""
+  },
+  "iconLibrary": "lucide",
+  "rtl": false,
+  "aliases": {
+    "components": "@/components",
+    "utils": "@/lib/utils",
+    "ui": "@/components/ui",
+    "lib": "@/lib",
+    "composables": "@/composables"
+  },
+  "registries": {}
+}
