@@ -1,11 +1,19 @@
 <script setup lang="ts">
-import { Button } from "@/components/ui/button"
+import DatabaseView from "./views/DatabaseView.vue"
+import WelcomeView from "@/views/WelcomeView.vue"
+import { useDatabaseStore } from '@/stores/database'
+
+const databaseStore = useDatabaseStore()
 
 </script>
 
 <template>
-  <h1>Hello world!</h1>
-  <Button @click="console.log('Shadcn')">Message</Button>
+  <main>
+    <template v-if="databaseStore.activeConnection">
+      <DatabaseView />
+    </template>
+    <template v-else>
+      <WelcomeView />
+    </template>
+  </main>
 </template>
-
-<style scoped></style>
