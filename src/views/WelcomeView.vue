@@ -37,7 +37,7 @@ async function openSqlite() {
 <template>
   <div class="container mx-auto p-5">
     <nav>
-      <div class="text-4xl font-bold select-none">DBDesk</div>
+      <div class="text-4xl font-bold select-none">Hanger</div>
     </nav>
     <Button variant="outline" @click="openSqlite">Open SQLite DB</Button>
   </div>
