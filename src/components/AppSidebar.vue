@@ -25,9 +25,11 @@ import { useUIStore } from "@/stores/ui"
 const databaseStore = useDatabaseStore()
 const UIStore = useUIStore()
 
-function fillQueryForTable(table: string) {
+function pickTable(table: string) {
   UIStore.breadcrumbs = ["Tables", table]
+  databaseStore.activeElement = ["table", table]
   databaseStore.sql = `SELECT * FROM "${table}" LIMIT 24;`
+  databaseStore.runQuery()
 }
 
 </script>
@@ -56,7 +58,7 @@ function fillQueryForTable(table: string) {
         <CollapsibleContent>
           <SidebarMenuSub v-for="table in databaseStore.tables" :key="table">
             <SidebarMenuSubItem>
-              <SidebarMenuSubButton @click="fillQueryForTable(table)">
+              <SidebarMenuSubButton @click="pickTable(table)">
                 {{ table }}
               </SidebarMenuSubButton>
             </SidebarMenuSubItem>

@@ -1,5 +1,7 @@
 export type DatabaseType = "sqlite" | "postgresql" | "mysql"
 
+export type ActiveElementType = "table" | "index" | "transaction" | "view"
+
 export type SqliteConfig = {
   type: "sqlite"
   path: string
