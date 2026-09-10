@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from "vue"
 
 // UI imports
 import { ChevronRight, Table } from "@lucide/vue"
@@ -25,11 +26,22 @@ import { useUIStore } from "@/stores/ui"
 const databaseStore = useDatabaseStore()
 const UIStore = useUIStore()
 
-function pickTable(table: string) {
+async function pickTable(table: string) {
   UIStore.breadcrumbs = ["Tables", table]
   databaseStore.activeElement = ["table", table]
-  databaseStore.sql = `SELECT * FROM "${table}" LIMIT 24;`
-  databaseStore.runQuery()
+
+  databaseStore.sql = `SELECT COUNT(*) AS row_count FROM "${table}";`
+  await databaseStore.runQuery()
+
+  databaseStore.rowCount = Number(
+    databaseStore.result?.rows[0]?.row_count ?? 0
+  )
+
+  databaseStore.currentPage = 1
+  const offset = (databaseStore.currentPage - 1) * 22
+
+  databaseStore.sql = `SELECT * FROM "${table}" LIMIT 22 OFFSET ${offset};`
+  await databaseStore.runQuery()
 }
 
 </script>

@@ -1,6 +1,6 @@
 import { defineStore } from "pinia"
 import { invoke } from "@tauri-apps/api/core"
-import { ref } from "vue"
+import { computed, ref } from "vue"
 
 import type { ActiveElementType, Connection, QueryResult } from "@/types"
 
@@ -13,6 +13,13 @@ export const useDatabaseStore = defineStore("database", () => {
   const result = ref<QueryResult | null>(null)
   const error = ref<string | null>(null)
   const loading = ref<boolean>(false)
+
+  // Pagination
+  const rowCount = ref<number | null>(null)
+  const pageCount = computed<number>(() => {
+    return Math.max(1, Math.ceil((rowCount.value ?? 0) / 22))
+  })
+  const currentPage = ref<number>(1)
 
   const activeElement = ref<[ActiveElementType, string] | null>(null)
 
@@ -43,9 +50,12 @@ export const useDatabaseStore = defineStore("database", () => {
     // State values
     activeConnection,
     activeElement,
+    currentPage,
     error,
     loading,
+    pageCount,
     result,
+    rowCount,
     sql,
     tables,
 
