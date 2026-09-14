@@ -1,5 +1,3 @@
-# Note: this file was generated using AI
-
 name: Build installers
 
 on:
@@ -19,8 +17,10 @@ jobs:
         include:
           - os: macos-latest
             args: "--target aarch64-apple-darwin"
+
           - os: macos-latest
             args: "--target x86_64-apple-darwin"
+
           - os: ubuntu-22.04
             args: ""
 
@@ -33,16 +33,22 @@ jobs:
         if: matrix.os == 'ubuntu-22.04'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf xdg-utils
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            libappindicator3-dev \
+            librsvg2-dev \
+            patchelf \
+            xdg-utils
+
+      # pnpm must be installed before setup-node enables pnpm caching.
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.20.0
 
       - uses: actions/setup-node@v6
         with:
           node-version: 24
           cache: pnpm
-
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 11.20.0
 
       - uses: dtolnay/rust-toolchain@stable
         with:
@@ -52,13 +58,17 @@ jobs:
         with:
           workspaces: "./src-tauri -> target"
 
-      - run: pnpm install --frozen-lockfile
+      - name: Install JavaScript dependencies
+        run: pnpm install --frozen-lockfile
 
-      - uses: tauri-apps/tauri-action@v1
+      - name: Build installers and create draft release
+        uses: tauri-apps/tauri-action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tagName: v__VERSION__
           releaseName: "Hanger v__VERSION__"
+          releaseBody: "Download the installer for your operating system."
           releaseDraft: true
+          prerelease: false
           args: ${{ matrix.args }}
