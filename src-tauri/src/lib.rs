@@ -27,6 +27,13 @@ fn list_tables(state: State<DbState>) -> Result<Vec<String>, String> {
 }
 
 #[tauri::command]
+fn list_table_indexes(table: String, state: State<DbState>) -> Result<Vec<db::IndexInfo>, String> {
+    let guard = state.0.lock().unwrap();
+    let database = guard.as_ref().ok_or("No database open")?;
+    database.list_table_indexes(&table)
+}
+
+#[tauri::command]
 fn run_query(sql: String, state: State<DbState>) -> Result<db::QueryResult, String> {
     let guard = state.0.lock().unwrap();
     let database = guard.as_ref().ok_or("No database open")?;
@@ -41,6 +48,7 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             open_sqlite_database,
             list_tables,
+            list_table_indexes,
             run_query
         ])
         .setup(|app| {

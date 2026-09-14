@@ -3,8 +3,12 @@ import { invoke } from "@tauri-apps/api/core"
 import { computed, ref } from "vue"
 
 import type { ActiveElementType, Connection, QueryResult } from "@/types"
+import { useUIStore } from "@/stores/ui"
+
 
 export const useDatabaseStore = defineStore("database", () => {
+  const UIStore = useUIStore();
+
   const activeConnection = ref<Connection | null>(null)
   const tables = ref<string[]>([])
 
@@ -17,7 +21,7 @@ export const useDatabaseStore = defineStore("database", () => {
   // Pagination
   const rowCount = ref<number | null>(null)
   const pageCount = computed<number>(() => {
-    return Math.max(1, Math.ceil((rowCount.value ?? 0) / 22))
+    return Math.max(1, Math.ceil((rowCount.value ?? 0) / UIStore.tableRowsPerPage))
   })
   const currentPage = ref<number>(1)
 

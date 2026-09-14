@@ -3,7 +3,7 @@ use std::sync::Mutex;
 use rusqlite::types::ValueRef;
 use rusqlite::Connection;
 
-use super::{Database, QueryResult};
+use super::{Database, IndexInfo, QueryResult};
 
 pub struct SqliteDatabase {
     conn: Mutex<Connection>,
@@ -36,6 +36,28 @@ impl Database for SqliteDatabase {
             .map_err(|e| e.to_string())?;
 
         Ok(tables)
+    }
+
+    fn list_table_indexes(&self, table: &str) -> Result<Vec<IndexInfo>, String> {
+        let conn = self.conn.lock().unwrap();
+        let mut stmt = conn.prepare(
+            "SELECT name, sql
+            FROM sqlite_master
+            WHERE type = 'index' AND tbl_name = ?1
+            ORDER BY name"
+        ).map_err(|e| e.to_string())?;
+
+        let indexes = stmt.query_map([table], |row| {
+            Ok(IndexInfo {
+                name: row.get(0)?,
+                sql: row.get(1)?,
+            })
+        })
+            .map_err(|e| e.to_string())?
+            .collect::<Result<Vec<_>, _>>()
+            .map_err(|e| e.to_string())?;
+
+        Ok(indexes)
     }
 
     fn run_query(&self, sql: &str) -> Result<QueryResult, String> {

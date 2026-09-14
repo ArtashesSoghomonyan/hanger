@@ -27,7 +27,7 @@ const databaseStore = useDatabaseStore()
 const UIStore = useUIStore()
 
 async function pickTable(table: string) {
-  UIStore.breadcrumbs = ["Tables", table]
+  UIStore.breadcrumbs = ["Tables", table, "Data"]
   databaseStore.activeElement = ["table", table]
 
   databaseStore.sql = `SELECT COUNT(*) AS row_count FROM "${table}";`
@@ -38,9 +38,9 @@ async function pickTable(table: string) {
   )
 
   databaseStore.currentPage = 1
-  const offset = (databaseStore.currentPage - 1) * 22
+  const offset = (databaseStore.currentPage - 1) * UIStore.tableRowsPerPage
 
-  databaseStore.sql = `SELECT * FROM "${table}" LIMIT 22 OFFSET ${offset};`
+  databaseStore.sql = `SELECT * FROM "${table}" LIMIT ${UIStore.tableRowsPerPage} OFFSET ${offset};`
   await databaseStore.runQuery()
 }
 
