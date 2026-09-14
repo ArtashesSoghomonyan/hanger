@@ -1,10 +1,10 @@
 [package]
 name = "hanger"
-version = "0.1.0"
-description = "A Tauri App"
-authors = ["you"]
-license = ""
-repository = ""
+version = "0.1.2"
+description = "A cross-platform SQL database viewer and editor"
+authors = ["Artashes Soghomonyan"]
+license = "MIT"
+repository = "https://github.com/ArtashesSoghomonyan/hanger"
 edition = "2021"
 rust-version = "1.77.2"
 
