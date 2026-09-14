@@ -15,3 +15,8 @@
 
 ### Changed
 - Changed the identifier in tauri config, description and the author
+
+## [0.1.3] - 2026-09-14
+
+### Added
+- Trying to add github actions support for binary deployment
