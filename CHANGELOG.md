@@ -1,7 +1,7 @@
 # Changelog
 
-## [0.1.0] - 2026-09-??
+## [0.1.0] - 2026-09-14
 
 ### Added
-- Welcome page
 - SQLite support
+- Table and index views
