@@ -3,8 +3,11 @@ import { open } from "@tauri-apps/plugin-dialog"
 import { invoke } from "@tauri-apps/api/core"
 import { Button } from "@/components/ui/button"
 import { useDatabaseStore } from "@/stores/database"
+import { useUIStore } from "@/stores/ui"
 
 const databaseStore = useDatabaseStore()
+const UIStore = useUIStore()
+const appVersion = __APP_VERSION__
 
 async function openSqlite() {
   const path = await open({
@@ -37,8 +40,9 @@ async function openSqlite() {
 <template>
   <div class="container mx-auto p-5">
     <nav>
-      <div class="text-4xl font-bold select-none">Hanger</div>
+      <div class="text-4xl font-bold select-none">Hanger v{{ appVersion }}</div>
     </nav>
     <Button variant="outline" @click="openSqlite">Open SQLite DB</Button>
+    <div v-if="UIStore.updateAvailable">There is an update available</div>
   </div>
 </template>
