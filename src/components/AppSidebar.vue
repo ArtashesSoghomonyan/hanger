@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/sidebar"
 
 // Local imports
+import CloseModal from "@/components/CloseModal.vue"
 import { useDatabaseStore } from "@/stores/database"
 import { useUIStore } from "@/stores/ui"
 
@@ -51,7 +52,7 @@ async function pickTable(table: string) {
     <SidebarHeader>
       <div class="flex items-center justify-between gap-2 px-2">
         <span class="truncate text-sm font-bold">{{ databaseStore.activeConnection?.name }}</span>
-        <Button variant="ghost" size="xs" @click="databaseStore.closeConnection()">Close</Button>
+        <CloseModal />
       </div>
     </SidebarHeader>
 
