@@ -6,7 +6,7 @@ use tauri::State;
 
 use db::sqlite::SqliteDatabase;
 use db::Database;
-
+    
 /// Holds the currently-open database as a boxed engine behind the `Database`
 /// trait so commands stay engine-agnostic (SQLite today, PG/MySQL later).
 struct DbState(Mutex<Option<Box<dyn Database>>>);
@@ -43,6 +43,8 @@ fn run_query(sql: String, state: State<DbState>) -> Result<db::QueryResult, Stri
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_updater::Builder::new().build())
+        .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_dialog::init())
         .manage(DbState(Mutex::new(None)))
         .invoke_handler(tauri::generate_handler![

@@ -20,3 +20,9 @@
 
 ### Added
 - Trying to add github actions support for binary deployment
+
+## [0.2.0] - 2026-09-17
+
+### Added
+- Program update functionality
+- Database closing confirmation modal menu (dialog) 

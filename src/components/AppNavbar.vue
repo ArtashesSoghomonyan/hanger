@@ -7,7 +7,7 @@ import {
   BreadcrumbSeparator
 } from "@/components/ui/breadcrumb"
 import { Button } from "@/components/ui/button"
-import { ArrowDownToLine } from "@lucide/vue"
+import { ArrowDownToLine, RotateCcw } from "@lucide/vue"
 
 import { useUIStore } from "@/stores/ui";
 
@@ -28,7 +28,25 @@ const UIStore = useUIStore()
       </Breadcrumb>
     </div>
     <div>
-      <Button variant="ghost" v-if="UIStore.updateAvailable"><ArrowDownToLine/></Button>
+      <Button
+        v-if="UIStore.updateAvailable && UIStore.updateStatus !== 'restart-required'"
+        variant="ghost"
+        :disabled="UIStore.updateStatus === 'downloading' || UIStore.updateStatus === 'installing'"
+        title="Install update"
+        @click="UIStore.installUpdate"
+      >
+        <ArrowDownToLine />
+        <span class="sr-only">Install update</span>
+      </Button>
+      <Button
+        v-else-if="UIStore.updateStatus === 'restart-required'"
+        variant="ghost"
+        title="Restart to finish updating"
+        @click="UIStore.restartApp"
+      >
+        Restart
+        <RotateCcw />
+      </Button>
     </div>
   </header>
 </template>
