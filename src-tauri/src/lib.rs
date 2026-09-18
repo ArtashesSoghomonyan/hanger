@@ -34,6 +34,13 @@ fn open_sqlite_database(path: String, state: State<DbState>) -> Result<(), Strin
 }
 
 #[tauri::command]
+fn close_database(state: State<DbState>) -> Result<(), String> {
+    let mut guard = state.0.lock().map_err(|_| "database lock poisoned".to_string())?;
+    *guard = None;
+    Ok(())
+}
+
+#[tauri::command]
 fn list_tables(state: State<DbState>) -> Result<Vec<String>, String> {
     let guard = state.0.lock().unwrap();
     let database = guard.as_ref().ok_or("No database open")?;
@@ -77,6 +84,7 @@ pub fn run() {
         .manage(DbState(Mutex::new(None)))
         .invoke_handler(tauri::generate_handler![
             open_sqlite_database,
+            close_database,
             list_tables,
             list_table_indexes,
             list_triggers,

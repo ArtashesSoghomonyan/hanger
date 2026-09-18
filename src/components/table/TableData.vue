@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { watch } from "vue"
-
 import {
   TableBody,
   TableCell,
@@ -12,27 +10,8 @@ import {
 
 import TablePagination from "@/components/table/TablePagination.vue"
 import { useDatabaseStore } from "@/stores/database"
-import { useUIStore } from "@/stores/ui"
 
 const databaseStore = useDatabaseStore()
-const UIStore = useUIStore()
-
-watch(
-  () => databaseStore.currentPage,
-  async (page) => {
-    const activeElement = databaseStore.activeElement
-
-    if (!activeElement || (activeElement[0] !== "table" && activeElement[0] !== "view")) return
-
-    const table = activeElement[1]
-    const offset = (page - 1) * UIStore.tableRowsPerPage
-
-    databaseStore.sql = `SELECT * FROM "${table}" LIMIT ${UIStore.tableRowsPerPage} OFFSET ${offset};`
-
-    await databaseStore.runQuery()
-  }
-)
-
 </script>
 
 <template>

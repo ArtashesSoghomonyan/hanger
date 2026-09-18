@@ -17,21 +17,19 @@ const databaseStore = useDatabaseStore()
 
 <template>
   <Dialog>
-    <form>
-      <DialogTrigger as-child>
-        <Button variant="ghost">Close DB</Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-sm">
-        <DialogHeader>
-          <DialogTitle class="text-center">Do you really want to close the database connection?</DialogTitle>
-        </DialogHeader>
-        <DialogFooter class="m-auto">
-          <DialogClose as-child>
-            <Button variant="outline">Cancel</Button>
-          </DialogClose>
-          <Button type="submit" @click="databaseStore.closeConnection()">Yes, close it</Button>
-        </DialogFooter>
-      </DialogContent>
-    </form>
+    <DialogTrigger as-child>
+      <Button variant="ghost">Close DB</Button>
+    </DialogTrigger>
+    <DialogContent class="sm:max-w-sm">
+      <DialogHeader>
+        <DialogTitle class="text-center">Do you really want to close the database connection?</DialogTitle>
+      </DialogHeader>
+      <DialogFooter class="m-auto">
+        <DialogClose as-child>
+          <Button variant="outline">Cancel</Button>
+        </DialogClose>
+        <Button type="button" @click="databaseStore.closeConnection()">Yes, close it</Button>
+      </DialogFooter>
+    </DialogContent>
   </Dialog>
 </template>

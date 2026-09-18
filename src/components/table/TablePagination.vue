@@ -18,7 +18,8 @@ const UIStore = useUIStore()
 <template>
   <Pagination
     v-if="databaseStore.pageCount > 1"
-    v-model:page="databaseStore.currentPage"
+    :page="databaseStore.currentPage"
+    @update:page="databaseStore.goToPage"
     :items-per-page="UIStore.tableRowsPerPage"
     :total="databaseStore.rowCount ?? 0"
     class="w-full"

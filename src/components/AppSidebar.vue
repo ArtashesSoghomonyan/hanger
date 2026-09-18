@@ -18,6 +18,7 @@ import {
 
 // Local imports
 import CloseModal from "@/components/CloseModal.vue"
+import { quoteIdentifier, toSqlInteger } from "@/lib/sql"
 import { useDatabaseStore } from "@/stores/database"
 import { useUIStore } from "@/stores/ui"
 import type { TriggerInfo, ViewInfo } from "@/types"
@@ -29,7 +30,7 @@ async function pickTable(table: string) {
   UIStore.breadcrumbs = ["Tables", table, "Data"]
   databaseStore.activeElement = ["table", table]
 
-  databaseStore.sql = `SELECT COUNT(*) AS row_count FROM "${table}";`
+  databaseStore.sql = `SELECT COUNT(*) AS row_count FROM ${quoteIdentifier(table)};`
   await databaseStore.runQuery()
 
   databaseStore.rowCount = Number(
@@ -39,7 +40,7 @@ async function pickTable(table: string) {
   databaseStore.currentPage = 1
   const offset = (databaseStore.currentPage - 1) * UIStore.tableRowsPerPage
 
-  databaseStore.sql = `SELECT * FROM "${table}" LIMIT ${UIStore.tableRowsPerPage} OFFSET ${offset};`
+  databaseStore.sql = `SELECT * FROM ${quoteIdentifier(table)} LIMIT ${toSqlInteger(UIStore.tableRowsPerPage)} OFFSET ${toSqlInteger(offset)};`
   await databaseStore.runQuery()
 }
 
@@ -48,7 +49,7 @@ async function pickView(view: ViewInfo) {
   databaseStore.activeElement = ["view", view.name]
   databaseStore.viewSQL = view.sql
 
-  databaseStore.sql = `SELECT COUNT(*) AS row_count FROM "${view.name}";`
+  databaseStore.sql = `SELECT COUNT(*) AS row_count FROM ${quoteIdentifier(view.name)};`
   await databaseStore.runQuery()
 
   databaseStore.rowCount = Number(
@@ -58,7 +59,7 @@ async function pickView(view: ViewInfo) {
   databaseStore.currentPage = 1
   const offset = (databaseStore.currentPage - 1) * UIStore.tableRowsPerPage
 
-  databaseStore.sql = `SELECT * FROM "${view.name}" LIMIT ${UIStore.tableRowsPerPage} OFFSET ${offset};`
+  databaseStore.sql = `SELECT * FROM ${quoteIdentifier(view.name)} LIMIT ${toSqlInteger(UIStore.tableRowsPerPage)} OFFSET ${toSqlInteger(offset)};`
   await databaseStore.runQuery()
 }
 
