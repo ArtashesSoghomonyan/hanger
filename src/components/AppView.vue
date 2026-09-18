@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card"
 
 import TableData from "@/components/table/TableData.vue"
 import { useDatabaseStore } from "@/stores/database"
+import SQLCode from "./SQLCode.vue";
 
 const databaseStore = useDatabaseStore()
 
@@ -22,9 +23,9 @@ const databaseStore = useDatabaseStore()
     </div>
 
     <div v-else-if="databaseStore.result" class="flex min-h-0 flex-1 flex-col gap-3">
-      <Card v-if="databaseStore.viewSQL" class="max-h-40 shrink-0 overflow-hidden">
+      <Card v-if="databaseStore.viewSQL" class="max-h-20 shrink-0 overflow-hidden">
         <CardContent class="no-scrollbar min-h-0 flex-1 overflow-auto overscroll-contain">
-          <pre class="text-xs whitespace-pre-wrap break-words">{{ databaseStore.viewSQL }}</pre>
+          <SQLCode :code="databaseStore.viewSQL" class="p-2" />
         </CardContent>
       </Card>
 
