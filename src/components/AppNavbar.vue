@@ -7,7 +7,8 @@ import {
   BreadcrumbSeparator
 } from "@/components/ui/breadcrumb"
 import { Button } from "@/components/ui/button"
-import { ArrowDownToLine, RotateCcw } from "@lucide/vue"
+import { ArrowDownToLine, RotateCcw, Settings } from "@lucide/vue"
+import { RouterLink } from "vue-router"
 
 import { useUIStore } from "@/stores/ui"
 
@@ -46,6 +47,12 @@ const UIStore = useUIStore()
       >
         Restart
         <RotateCcw />
+      </Button>
+      <Button as-child variant="ghost" title="Settings">
+        <RouterLink to="/settings">
+          <Settings />
+          <span class="sr-only">Settings</span>
+        </RouterLink>
       </Button>
     </div>
   </header>
