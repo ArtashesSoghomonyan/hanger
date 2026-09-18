@@ -2,6 +2,7 @@ mod db;
 
 use std::sync::Mutex;
 
+use serde::Serialize;
 use tauri::State;
 
 use db::sqlite::SqliteDatabase;
@@ -10,6 +11,12 @@ use db::Database;
 /// Holds the currently-open database as a boxed engine behind the `Database`
 /// trait so commands stay engine-agnostic (SQLite today, PG/MySQL later).
 struct DbState(Mutex<Option<Box<dyn Database>>>);
+
+#[derive(Serialize)]
+pub struct ViewInfo {
+    pub name: String,
+    pub sql: Option<String>,
+}
 
 #[tauri::command]
 fn open_sqlite_database(path: String, state: State<DbState>) -> Result<(), String> {
@@ -34,6 +41,13 @@ fn list_table_indexes(table: String, state: State<DbState>) -> Result<Vec<db::In
 }
 
 #[tauri::command]
+fn list_views(state: State<DbState>) -> Result<Vec<ViewInfo>, String> {
+    let guard = state.0.lock().unwrap();
+    let database = guard.as_ref().ok_or("No database open")?;
+    database.list_views()
+}
+
+#[tauri::command]
 fn run_query(sql: String, state: State<DbState>) -> Result<db::QueryResult, String> {
     let guard = state.0.lock().unwrap();
     let database = guard.as_ref().ok_or("No database open")?;
@@ -51,6 +65,7 @@ pub fn run() {
             open_sqlite_database,
             list_tables,
             list_table_indexes,
+            list_views,
             run_query
         ])
         .setup(|app| {

@@ -9,15 +9,8 @@ import {
   TableHeader,
   TableRow
 } from "@/components/ui/table"
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationNext,
-  PaginationPrevious
-} from "@/components/ui/pagination"
 
+import TablePagination from "@/components/table/TablePagination.vue"
 import { useDatabaseStore } from "@/stores/database"
 import { useUIStore } from "@/stores/ui"
 
@@ -29,7 +22,7 @@ watch(
   async (page) => {
     const activeElement = databaseStore.activeElement
 
-    if (!activeElement || activeElement[0] !== "table") return
+    if (!activeElement || (activeElement[0] !== "table" && activeElement[0] !== "view")) return
 
     const table = activeElement[1]
     const offset = (page - 1) * UIStore.tableRowsPerPage
@@ -68,28 +61,7 @@ watch(
     </TableBody>
 
     <TableFooter>
-      <Pagination
-        v-if="databaseStore.pageCount > 1"
-        v-model:page="databaseStore.currentPage"
-        :items-per-page="UIStore.tableRowsPerPage"
-        :total="databaseStore.rowCount ?? 0"
-        class="w-full"
-      >
-        <PaginationContent v-slot="{ items }" >
-          <PaginationPrevious />
-          <template v-for="(item, index) in items" :key="index">
-            <PaginationItem
-              v-if="item.type === 'page'"
-              :value="item.value"
-              :is-active="item.value === databaseStore.currentPage"
-            >
-              {{ item.value }}
-            </PaginationItem>
-            <PaginationEllipsis v-else />
-          </template>
-          <PaginationNext />
-        </PaginationContent>
-      </Pagination>
+      <TablePagination />
     </TableFooter>
   </table>
 </template>

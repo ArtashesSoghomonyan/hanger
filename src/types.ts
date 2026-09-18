@@ -38,3 +38,7 @@ export type QueryResult = {
   rows: Record<string, unknown>[]
 }
 
+export type ViewInfo = {
+  name: string
+  sql: string | null
+}

@@ -2,7 +2,7 @@ import { defineStore } from "pinia"
 import { invoke } from "@tauri-apps/api/core"
 import { computed, ref } from "vue"
 
-import type { ActiveElementType, Connection, QueryResult } from "@/types"
+import type { ActiveElementType, Connection, QueryResult, ViewInfo } from "@/types"
 import { useUIStore } from "@/stores/ui"
 
 
@@ -10,7 +10,11 @@ export const useDatabaseStore = defineStore("database", () => {
   const UIStore = useUIStore();
 
   const activeConnection = ref<Connection | null>(null)
+
+  // Data
   const tables = ref<string[]>([])
+  const views = ref<ViewInfo[]>([])
+  const viewSQL = ref<string | null>(null)
 
   // Query data
   const sql = ref<string>("")
@@ -27,9 +31,10 @@ export const useDatabaseStore = defineStore("database", () => {
 
   const activeElement = ref<[ActiveElementType, string] | null>(null)
 
-  function openConnection(connection: Connection, tableList: string[]) {
+  function openConnection(connection: Connection, tableList: string[], viewsList: ViewInfo[]) {
     activeConnection.value = connection
     tables.value = tableList
+    views.value = viewsList
   }
 
   function closeConnection() {
@@ -62,6 +67,8 @@ export const useDatabaseStore = defineStore("database", () => {
     rowCount,
     sql,
     tables,
+    views,
+    viewSQL,
 
     // Functions
     closeConnection,

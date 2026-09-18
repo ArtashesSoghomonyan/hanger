@@ -3,6 +3,8 @@ use std::sync::Mutex;
 use rusqlite::types::ValueRef;
 use rusqlite::Connection;
 
+use crate::ViewInfo;
+
 use super::{Database, IndexInfo, QueryResult};
 
 pub struct SqliteDatabase {
@@ -61,6 +63,30 @@ impl Database for SqliteDatabase {
             .map_err(|e| e.to_string())?;
 
         Ok(indexes)
+    }
+
+    fn list_views(&self) -> Result<Vec<ViewInfo>, String> {
+        let conn = self.conn.lock().unwrap();
+        let mut stmt = conn
+            .prepare(
+                "SELECT name, sql FROM sqlite_master \
+                WHERE type = 'view' AND name NOT LIKE 'sqlite_%' \
+                ORDER BY name",
+            )
+            .map_err(|e| e.to_string())?;
+
+        let views = stmt
+            .query_map([], |row| {
+                Ok(ViewInfo {
+                    name: row.get(0)?,
+                    sql: row.get(1)?,
+                })
+            })
+            .map_err(|e| e.to_string())?
+            .collect::<Result<Vec<_>, _>>()
+            .map_err(|e| e.to_string())?;
+
+        Ok(views)
     }
 
     fn run_query(&self, sql: &str) -> Result<QueryResult, String> {

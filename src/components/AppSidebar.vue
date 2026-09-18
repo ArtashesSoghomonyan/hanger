@@ -1,9 +1,6 @@
 <script setup lang="ts">
-import { computed } from "vue"
-
 // UI imports
-import { ChevronRight, Table } from "@lucide/vue"
-import { Button } from "@/components/ui/button"
+import { ChevronRight, Eye, Table } from "@lucide/vue"
 import {
   Collapsible,
   CollapsibleContent,
@@ -23,6 +20,7 @@ import {
 import CloseModal from "@/components/CloseModal.vue"
 import { useDatabaseStore } from "@/stores/database"
 import { useUIStore } from "@/stores/ui"
+import type { ViewInfo } from "@/types"
 
 const databaseStore = useDatabaseStore()
 const UIStore = useUIStore()
@@ -42,6 +40,25 @@ async function pickTable(table: string) {
   const offset = (databaseStore.currentPage - 1) * UIStore.tableRowsPerPage
 
   databaseStore.sql = `SELECT * FROM "${table}" LIMIT ${UIStore.tableRowsPerPage} OFFSET ${offset};`
+  await databaseStore.runQuery()
+}
+
+async function pickView(view: ViewInfo) {
+  UIStore.breadcrumbs = ["Views", view.name]
+  databaseStore.activeElement = ["view", view.name]
+  databaseStore.viewSQL = view.sql
+
+  databaseStore.sql = `SELECT COUNT(*) AS row_count FROM "${view.name}";`
+  await databaseStore.runQuery()
+
+  databaseStore.rowCount = Number(
+    databaseStore.result?.rows[0]?.row_count ?? 0
+  )
+
+  databaseStore.currentPage = 1
+  const offset = (databaseStore.currentPage - 1) * UIStore.tableRowsPerPage
+
+  databaseStore.sql = `SELECT * FROM "${view.name}" LIMIT ${UIStore.tableRowsPerPage} OFFSET ${offset};`
   await databaseStore.runQuery()
 }
 
@@ -73,6 +90,28 @@ async function pickTable(table: string) {
             <SidebarMenuSubItem>
               <SidebarMenuSubButton @click="pickTable(table)">
                 {{ table }}
+              </SidebarMenuSubButton>
+            </SidebarMenuSubItem>
+          </SidebarMenuSub>
+        </CollapsibleContent>
+      </Collapsible>
+
+      <Collapsible class="group/collapsible">
+        <CollapsibleTrigger as-child>
+          <SidebarMenuButton>
+            <Eye />
+            <span>Views</span>
+            <ChevronRight
+              class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
+            />
+          </SidebarMenuButton>
+        </CollapsibleTrigger>
+
+        <CollapsibleContent>
+          <SidebarMenuSub v-for="view in databaseStore.views" :key="view.name">
+            <SidebarMenuSubItem>
+              <SidebarMenuSubButton @click="pickView(view)">
+                {{ view.name }}
               </SidebarMenuSubButton>
             </SidebarMenuSubItem>
           </SidebarMenuSub>
