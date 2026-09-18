@@ -26,3 +26,10 @@
 ### Added
 - Program update functionality
 - Database closing confirmation modal menu (dialog) 
+
+## [0.3.0] - 2026-09-18
+
+### Added
+- SQLite views view
+- SQL code syntax highlighting
+- SQLite triggers view

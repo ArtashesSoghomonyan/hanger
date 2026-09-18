@@ -1,6 +1,6 @@
 [package]
 name = "hanger"
-version = "0.2.0"
+version = "0.3.0"
 description = "A cross-platform SQL database viewer and editor"
 authors = ["Artashes Soghomonyan"]
 license = "MIT"
