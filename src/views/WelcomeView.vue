@@ -4,7 +4,7 @@ import { invoke } from "@tauri-apps/api/core"
 import { Button } from "@/components/ui/button"
 import { useDatabaseStore } from "@/stores/database"
 import { useUIStore } from "@/stores/ui"
-import type { ViewInfo } from "@/types"
+import type { TriggerInfo, ViewInfo } from "@/types"
 
 const databaseStore = useDatabaseStore()
 const UIStore = useUIStore()
@@ -20,6 +20,7 @@ async function openSqlite() {
   try {
     await invoke("open_sqlite_database", { path })
     const tables = await invoke<string[]>("list_tables")
+    const triggers = await invoke<TriggerInfo[]>("list_triggers")
     const views = await invoke<ViewInfo[]>("list_views")
 
     databaseStore.openConnection(
@@ -33,6 +34,7 @@ async function openSqlite() {
       },
       tables,
       views,
+      triggers
     )
   } catch (error) {
     console.error("Failed to open database", error)

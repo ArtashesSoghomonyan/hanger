@@ -18,6 +18,13 @@ pub struct ViewInfo {
     pub sql: Option<String>,
 }
 
+#[derive(Serialize)]
+pub struct TriggerInfo {
+    pub name: String,
+    pub tbl_name: Option<String>,
+    pub sql: Option<String>,
+}
+
 #[tauri::command]
 fn open_sqlite_database(path: String, state: State<DbState>) -> Result<(), String> {
     let database = SqliteDatabase::open(&path)?;
@@ -48,6 +55,13 @@ fn list_views(state: State<DbState>) -> Result<Vec<ViewInfo>, String> {
 }
 
 #[tauri::command]
+fn list_triggers(state: State<DbState>) -> Result<Vec<TriggerInfo>, String> {
+    let guard = state.0.lock().unwrap();
+    let database = guard.as_ref().ok_or("No database open")?;
+    database.list_triggers()
+}
+
+#[tauri::command]
 fn run_query(sql: String, state: State<DbState>) -> Result<db::QueryResult, String> {
     let guard = state.0.lock().unwrap();
     let database = guard.as_ref().ok_or("No database open")?;
@@ -65,6 +79,7 @@ pub fn run() {
             open_sqlite_database,
             list_tables,
             list_table_indexes,
+            list_triggers,
             list_views,
             run_query
         ])

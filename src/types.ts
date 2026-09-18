@@ -1,6 +1,6 @@
 export type DatabaseType = "sqlite" | "postgresql" | "mysql"
 
-export type ActiveElementType = "table" | "index" | "transaction" | "view"
+export type ActiveElementType = "table" | "index" | "trigger" | "view"
 
 export type SqliteConfig = {
   type: "sqlite"
@@ -40,5 +40,11 @@ export type QueryResult = {
 
 export type ViewInfo = {
   name: string
+  sql: string | null
+}
+
+export type TriggerInfo = {
+  name: string
+  tbl_name: string | null
   sql: string | null
 }

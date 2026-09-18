@@ -2,6 +2,7 @@ pub mod sqlite;
 
 use serde::Serialize;
 
+use crate::TriggerInfo;
 use crate::ViewInfo;
 
 /// Uniform result shape returned by every database engine.
@@ -22,6 +23,7 @@ pub struct IndexInfo {
 pub trait Database: Send {
     fn list_tables(&self) -> Result<Vec<String>, String>;
     fn list_table_indexes(&self, table: &str) -> Result<Vec<IndexInfo>, String>;
+    fn list_triggers(&self) -> Result<Vec<TriggerInfo>, String>;
     fn list_views(&self) -> Result<Vec<ViewInfo>, String>;
     fn run_query(&self, sql: &str) -> Result<QueryResult, String>;
 }

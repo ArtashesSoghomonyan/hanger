@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // UI imports
-import { ChevronRight, Eye, Table } from "@lucide/vue"
+import { ChevronRight, Eye, Table, Zap } from "@lucide/vue"
 import {
   Collapsible,
   CollapsibleContent,
@@ -20,7 +20,7 @@ import {
 import CloseModal from "@/components/CloseModal.vue"
 import { useDatabaseStore } from "@/stores/database"
 import { useUIStore } from "@/stores/ui"
-import type { ViewInfo } from "@/types"
+import type { TriggerInfo, ViewInfo } from "@/types"
 
 const databaseStore = useDatabaseStore()
 const UIStore = useUIStore()
@@ -60,6 +60,14 @@ async function pickView(view: ViewInfo) {
 
   databaseStore.sql = `SELECT * FROM "${view.name}" LIMIT ${UIStore.tableRowsPerPage} OFFSET ${offset};`
   await databaseStore.runQuery()
+}
+
+async function pickTrigger(trigger: TriggerInfo) {
+  UIStore.breadcrumbs = ["Trigger", trigger.name]
+  databaseStore.activeElement = ["trigger", trigger.name]
+  databaseStore.viewSQL = trigger.sql
+  databaseStore.triggerTableName = trigger.tbl_name
+  databaseStore.triggerName = trigger.name
 }
 
 </script>
@@ -112,6 +120,28 @@ async function pickView(view: ViewInfo) {
             <SidebarMenuSubItem>
               <SidebarMenuSubButton @click="pickView(view)">
                 {{ view.name }}
+              </SidebarMenuSubButton>
+            </SidebarMenuSubItem>
+          </SidebarMenuSub>
+        </CollapsibleContent>
+      </Collapsible>
+
+      <Collapsible class="group/collapsible">
+        <CollapsibleTrigger as-child>
+          <SidebarMenuButton>
+            <Zap />
+            <span>Triggers</span>
+            <ChevronRight
+              class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
+            />
+          </SidebarMenuButton>
+        </CollapsibleTrigger>
+
+        <CollapsibleContent>
+          <SidebarMenuSub v-for="trigger in databaseStore.triggers" :key="trigger.name">
+            <SidebarMenuSubItem>
+              <SidebarMenuSubButton @click="pickTrigger(trigger)">
+                {{ trigger.name }}
               </SidebarMenuSubButton>
             </SidebarMenuSubItem>
           </SidebarMenuSub>

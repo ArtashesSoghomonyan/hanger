@@ -5,6 +5,7 @@ import AppNavbar from "@/components/AppNavbar.vue"
 import AppSidebar from "@/components/AppSidebar.vue"
 import AppTable from "@/components/AppTable.vue"
 import AppView from "@/components/AppView.vue"
+import AppTrigger from "@/components/AppTrigger.vue"
 import { useDatabaseStore } from "@/stores/database"
 
 const databaseStore = useDatabaseStore()
@@ -25,6 +26,9 @@ const databaseStore = useDatabaseStore()
       </template>
       <template v-else-if="databaseStore.activeElement[0] === 'view'">
         <AppView />
+      </template>
+      <template v-else-if="databaseStore.activeElement[0] === 'trigger'">
+        <AppTrigger />
       </template>
       <template v-else>
         <h1>Else</h1>

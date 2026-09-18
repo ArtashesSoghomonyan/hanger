@@ -3,7 +3,7 @@ use std::sync::Mutex;
 use rusqlite::types::ValueRef;
 use rusqlite::Connection;
 
-use crate::ViewInfo;
+use crate::{TriggerInfo, ViewInfo};
 
 use super::{Database, IndexInfo, QueryResult};
 
@@ -87,6 +87,31 @@ impl Database for SqliteDatabase {
             .map_err(|e| e.to_string())?;
 
         Ok(views)
+    }
+
+    fn list_triggers(&self) -> Result<Vec<TriggerInfo>, String> {
+        let conn = self.conn.lock().unwrap();
+        let mut stmt = conn
+            .prepare(
+                "SELECT name, tbl_name, sql FROM sqlite_master \
+                WHERE type = 'trigger' AND name NOT LIKE 'sqlite_%' \
+                ORDER BY name",
+            )
+            .map_err(|e| e.to_string())?;
+
+        let triggers = stmt
+            .query_map([], |row| {
+                Ok(TriggerInfo {
+                    name: row.get(0)?,
+                    tbl_name: row.get(1)?,
+                    sql: row.get(2)?,
+                })
+            })
+            .map_err(|e| e.to_string())?
+            .collect::<Result<Vec<_>, _>>()
+            .map_err(|e| e.to_string())?;
+
+        Ok(triggers)
     }
 
     fn run_query(&self, sql: &str) -> Result<QueryResult, String> {
