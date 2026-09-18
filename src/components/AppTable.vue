@@ -6,8 +6,8 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs"
 
-import TableData from "./table/TableData.vue"
-import TableIndexes from "./table/TableIndexes.vue"
+import TableData from "@/components/table/TableData.vue"
+import TableIndexes from "@/components/table/TableIndexes.vue"
 import { useDatabaseStore } from "@/stores/database"
 import { useUIStore } from "@/stores/ui.ts"
 

@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card"
 
 import TableData from "@/components/table/TableData.vue"
 import { useDatabaseStore } from "@/stores/database"
-import SQLCode from "@/components/SQLCode.vue";
+import SQLCode from "@/components/SQLCode.vue"
 
 const databaseStore = useDatabaseStore()
 </script>

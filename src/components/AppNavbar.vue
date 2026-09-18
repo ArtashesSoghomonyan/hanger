@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { SidebarTrigger } from '@/components/ui/sidebar'
+import { SidebarTrigger } from "@/components/ui/sidebar"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,7 +9,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { ArrowDownToLine, RotateCcw } from "@lucide/vue"
 
-import { useUIStore } from "@/stores/ui";
+import { useUIStore } from "@/stores/ui"
 
 const UIStore = useUIStore()
 </script>

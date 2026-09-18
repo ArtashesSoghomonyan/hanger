@@ -6,7 +6,7 @@ import type { ActiveElementType, Connection, QueryResult, TriggerInfo, ViewInfo 
 import { useUIStore } from "@/stores/ui"
 
 export const useDatabaseStore = defineStore("database", () => {
-  const UIStore = useUIStore();
+  const UIStore = useUIStore()
 
   const activeConnection = ref<Connection | null>(null)
 

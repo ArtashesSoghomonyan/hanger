@@ -48,3 +48,8 @@ export type TriggerInfo = {
   tbl_name: string | null
   sql: string | null
 }
+
+export type IndexInfo = {
+  name: string
+  sql: string | null
+}

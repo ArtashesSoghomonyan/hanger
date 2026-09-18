@@ -2,8 +2,7 @@
 import { ref, watch } from "vue"
 import { invoke } from "@tauri-apps/api/core"
 import { useDatabaseStore } from "@/stores/database"
-
-type IndexInfo = { name: string; sql: string | null }
+import type { IndexInfo } from "@/types"
 
 const databaseStore = useDatabaseStore()
 const indexes = ref<IndexInfo[]>([])
